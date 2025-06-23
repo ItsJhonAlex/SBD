@@ -1,4 +1,33 @@
 {
+	"name": "sbd-inventory-system",
+	"version": "1.0.0",
+	"description": "Sistema de Gestión de Inventario para la Universidad de Ciencias Informáticas (UCI)",
+	"main": "server.js",
+	"type": "commonjs",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "node --watch server.js",
+		"docker:dev": "./scripts/docker-dev.sh start",
+		"docker:stop": "./scripts/docker-dev.sh stop",
+		"docker:logs": "./scripts/docker-dev.sh logs",
+		"docker:status": "./scripts/docker-dev.sh status",
+		"docker:reset": "./scripts/docker-dev.sh reset",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"inventory",
+		"management",
+		"uci",
+		"postgresql",
+		"express",
+		"nodejs"
+	],
+	"author": "Jonathan Alejandro Rodríguez López",
+	"license": "MIT",
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=8.0.0"
+	},
 	"dependencies": {
 		"express": "^5.1.0",
 		"cors": "^2.8.5",
