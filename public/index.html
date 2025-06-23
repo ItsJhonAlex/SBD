@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBD - Sistema de Inventario UCI</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <!-- 🌸 Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon">🏛️</span>
+                    SBD Inventory - UCI
+                </h1>
+                <div class="search-container">
+                    <input type="text" id="globalSearch" placeholder="Buscar equipos, agentes..." class="search-input">
+                    <button id="searchBtn" class="search-btn">🔍</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 📊 Main Dashboard -->
+    <main class="main-container">
+        <div class="container">
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+                <button class="tab-btn" data-tab="agents">🖥️ Agentes</button>
+                <button class="tab-btn" data-tab="inventory">📦 Inventario</button>
+                <button class="tab-btn" data-tab="locations">📍 Ubicaciones</button>
+                <button class="tab-btn" data-tab="analysis">📈 Análisis</button>
+            </nav>
+
+            <!-- Tab Contents -->
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- System Statistics -->
+                    <div class="card stats-card">
+                        <h3>📊 Estadísticas del Sistema</h3>
+                        <div id="systemStats" class="stats-grid">
+                            <div class="loading">Cargando estadísticas...</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card activity-card">
+                        <h3>⚡ Actividad Reciente</h3>
+                        <div id="recentActivity" class="activity-list">
+                            <div class="loading">Cargando actividad...</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card actions-card">
+                        <h3>🚀 Acciones Rápidas</h3>
+                        <div class="quick-actions">
+                            <button class="action-btn" onclick="refreshData()">🔄 Actualizar Datos</button>
+                            <button class="action-btn" onclick="showTab('agents')">👀 Ver Agentes</button>
+                            <button class="action-btn" onclick="showTab('inventory')">📦 Ver Inventario</button>
+                            <button class="action-btn" onclick="exportData()">📋 Exportar Datos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents Tab -->
+            <div id="agents-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>🖥️ Gestión de Agentes</h2>
+                    <div class="section-actions">
+                        <input type="text" id="agentSearch" placeholder="Buscar agente..." class="filter-input">
+                        <button onclick="loadAgents()" class="refresh-btn">🔄</button>
+                    </div>
+                </div>
+
+                <div id="agentsContainer" class="data-container">
+                    <div class="loading">Cargando agentes...</div>
+                </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventory-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>📦 Inventario de Hardware y Software</h2>
+                    <div class="filter-controls">
+                        <select id="inventoryType" class="filter-select">
+                            <option value="all">Todo el inventario</option>
+                            <option value="hardware">Solo Hardware</option>
+                            <option value="software">Solo Software</option>
+                            <option value="motherboards">Motherboards</option>
+                        </select>
+                        <button onclick="loadInventory()" class="refresh-btn">🔄</button>
+                    </div>
+                </div>
+
+                <div id="inventoryContainer" class="data-container">
+                    <div class="loading">Cargando inventario...</div>
+                </div>
+            </div>
+
+            <!-- Locations Tab -->
+            <div id="locations-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>📍 Gestión de Ubicaciones</h2>
+                    <button onclick="loadLocations()" class="refresh-btn">🔄</button>
+                </div>
+
+                <div class="locations-grid">
+                    <div class="card">
+                        <h3>🏢 Ubicaciones</h3>
+                        <div id="locationsContainer">
+                            <div class="loading">Cargando ubicaciones...</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Estadísticas por Ubicación</h3>
+                        <div id="locationStatsContainer">
+                            <div class="loading">Cargando estadísticas...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div id="analysis-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>📈 Análisis y Reportes</h2>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="card">
+                        <h3>🧠 Análisis de Memoria RAM</h3>
+                        <div id="ramAnalysisContainer">
+                            <div class="loading">Cargando análisis de RAM...</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Resumen de Inventario</h3>
+                        <div id="inventorySummaryContainer">
+                            <div class="loading">Cargando resumen...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 🔍 Search Results Modal -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔍 Resultados de Búsqueda</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📱 Agent Details Modal -->
+    <div id="agentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🖥️ Detalles del Agente</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="agentDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/agents.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/locations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

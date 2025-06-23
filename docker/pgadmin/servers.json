@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "SBD PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "sbd_inventory",
+      "Username": "sbd_user",
+      "SSLMode": "prefer",
+      "Comment": "SBD Inventory System Database"
+    }
+  }
+} 
